@@ -2,9 +2,9 @@
   <div class="list">
       <div class="list_header">
         <p>{{list_name}}</p>
-        <div><p>down</p></div>
+        <div class="down_arrow"><img src="@/assets/down-arrow.png" alt=""></div>
       </div>
-      <Item v-for="n in 10" :key="n"/>
+      <Item  :text="item.text" v-for="(item,index) in this.$store.state.list" :key="index"/>
       
   </div>
 </template>
@@ -42,5 +42,13 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.list > .list_header > .down_arrow{
+  max-width: 50px;
+  max-height: 50px;
+}
+.list > .list_header > .down_arrow > img{
+  max-width: 80%;
+  max-height: 80%;
 }
 </style>

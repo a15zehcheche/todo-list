@@ -1,14 +1,17 @@
 <template>
   <div class="list_item">
       <div><input type="checkbox" name="" id=""></div>
-      <p>Task</p>
+      <p>{{text}}</p>
       <div><button>X</button></div>
   </div>
 </template>
 
 <script>
 export default {
-
+    name: 'HelloWorld',
+    props: {
+        text: String
+    }
 }
 </script>
 

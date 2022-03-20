@@ -1,10 +1,10 @@
 <template>
-  <div id="app">
+  <div id="appV">
     <!--img alt="Vue logo" src="./assets/logo.png"!-->
 
     <Header />
     <div class="list_box">
-      <List list_name="Incomplete Tasks" />
+       <List :list_name="'Incomplete Tasks'" />
       
     </div>
     
@@ -29,13 +29,16 @@ export default {
 </script>
 
 <style>
-#app {
+#app{
+   min-height: 100%;
+}
+#appV {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   /*margin-top: 60px;*/
-  min-height: 100%;
+  min-height: 100vh;
   display: grid;
   grid-template-rows: auto 1fr auto;
   grid-template-columns: 100%;

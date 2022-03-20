@@ -1,13 +1,27 @@
 <template>
    <div class="footer_box">
-      <div class="input_box"><input type="text" placeholder="Something todo" /></div>
-      <div class="add_button_box"><button>+</button></div>
+      <div class="input_box"><input type="text" v-model="text" placeholder="Something todo" /></div>
+       <div class="add_button_box"><button v-on:click="addTasck(this.text)">+</button></div>
     </div>
 </template>
 
 <script>
 export default {
-
+   data() {
+    return { 
+      text: "" 
+    }
+  },
+  methods: {
+      addTasck(task_text){
+        this.$store.commit('listAppend',task_text)
+        console.log(this.$store.state.list)
+        this.text ="";
+        this.$store.commit('increment')
+        console.log(this.$store.state.count)
+      },
+      
+  }
 }
 </script>
 
