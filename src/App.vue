@@ -2,13 +2,13 @@
   <div id="appV">
     <!--img alt="Vue logo" src="./assets/logo.png"!-->
 
-    <Header />
+    <Header class="app_header" />
     <div class="list_box">
-       <List :list_name="'Incomplete Tasks'" />
-      
+      <List :list_name="'Incomplete Tasks'" />
+      <List :done="true" :list_name="'Complete Tasks'" />
     </div>
-    
-    <Form/>
+
+    <Form class="app_footer" />
   </div>
 </template>
 
@@ -16,21 +16,21 @@
 //import HelloWorld from './components/HelloWorld.vue'
 import List from "./components/List.vue";
 import Header from "./components/header.vue";
-import Form from "./components/footer/form.vue"
+import Form from "./components/footer/form.vue";
 export default {
   name: "App",
   components: {
     //HelloWorld,
     List,
     Header,
-    Form
+    Form,
   },
 };
 </script>
 
 <style>
-#app{
-   min-height: 100%;
+#app {
+  min-height: 100%;
 }
 #appV {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -38,20 +38,32 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   /*margin-top: 60px;*/
-  min-height: 100vh;
+  height: 100vh;
   display: grid;
+  grid-template-columns: 1fr;
   grid-template-rows: auto 1fr auto;
   grid-template-columns: 100%;
+  grid-template-areas:
+    "header"
+    "main"
+    "footer";
 }
 html,
 body {
   width: 100%;
   height: 100%;
   margin: 0;
-  background-color: #0B222C;
+  background-color: #0b222c;
 }
-.list_box{
+.app_header {
+  grid-area: header;
+}
+.list_box {
+  grid-area: main;
   /*background-color: rgb(180, 97, 115);*/
+  overflow: auto;
 }
-
+.app_footer {
+  grid-area: footer;
+}
 </style>

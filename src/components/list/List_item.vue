@@ -1,17 +1,38 @@
 <template>
-  <div class="list_item">
-      <div><input type="checkbox" name="" id=""></div>
-      <p>{{text}}</p>
+  <div v-if="done && $store.state.list[index].done" class="list_item" >
+      <div><input type="checkbox" v-model="$store.state.list[index].done" name="" id=""></div>
+      <p class="task_text" :class="{done_style:done}">{{$store.state.list[index].text}}</p>
       <div><button>X</button></div>
+  </div>
+  <div v-if="!done && !$store.state.list[index].done" class="list_item" >
+      <div><input type="checkbox" v-model="$store.state.list[index].done" name="" id=""></div>
+      <p class="task_text" :class="{done_style:done}">{{$store.state.list[index].text}}</p>
+      <div><button @click="delItem(index)">X</button></div>
   </div>
 </template>
 
 <script>
 export default {
     name: 'HelloWorld',
+    data() {
+    return {
+      
+    };
+  },
     props: {
-        text: String
-    }
+        done: Boolean,
+        index: Number,
+    },
+    mounted:function(){
+  
+    },
+    methods:{
+        delItem(index){
+            this.$store.commit("itemDelete",index);
+        }
+    },
+    computed: {
+  }
 }
 </script>
 
@@ -31,5 +52,10 @@ export default {
     justify-content: center;
     align-items: center;
 }
-
+.list_item > .task_text{
+    word-wrap: break-word;
+}
+.done_style{
+   text-decoration: line-through;
+}
 </style>

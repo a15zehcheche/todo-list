@@ -7,6 +7,10 @@ export default createStore({
         done: false,
         text: "task1",
       },
+      {
+        done: true,
+        text: "task2",
+      },
     ],
   },
   getters: {
@@ -19,12 +23,20 @@ export default createStore({
     deincrement(state) {
       state.count--;
     },
-    listAppend(state, task_test) {
+    itemAppend(state, task_test) {
       let task = {
         done: false,
         text: task_test,
       };
-      state.list.push(task);
+      //add task in fist array index
+      state.list.unshift(task);
     },
+    itemDelete(state,index){
+      state.list.splice(index, 1);
+    },
+    updateStatus(state,data){
+      state.list[data.index].done = data.status;
+      console.log(state.list[data.index]);
+    }
   },
 });
