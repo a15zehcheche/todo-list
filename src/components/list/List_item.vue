@@ -1,14 +1,14 @@
 <template>
-  <div v-if="done && $store.state.list[index].done" class="list_item" >
-      <div><input type="checkbox" v-model="$store.state.list[index].done" name="" id=""></div>
-      <p class="task_text" :class="{done_style:done}">{{$store.state.list[index].text}}</p>
-      <div><button>X</button></div>
-  </div>
-  <div v-if="!done && !$store.state.list[index].done" class="list_item" >
+  <div v-if="done && $store.state.list[index].done || !done && !$store.state.list[index].done" class="list_item" >
       <div><input type="checkbox" v-model="$store.state.list[index].done" name="" id=""></div>
       <p class="task_text" :class="{done_style:done}">{{$store.state.list[index].text}}</p>
       <div><button @click="delItem(index)">X</button></div>
   </div>
+  <!--div v-if="!done && !$store.state.list[index].done" class="list_item" >
+      <div><input type="checkbox" v-model="$store.state.list[index].done" name="" id=""></div>
+      <p class="task_text" :class="{done_style:done}">{{$store.state.list[index].text}}</p>
+      <div><button @click="delItem(index)">X</button></div>
+  </div-->
 </template>
 
 <script>
