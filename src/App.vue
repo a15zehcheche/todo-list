@@ -25,6 +25,48 @@ export default {
     Header,
     Form,
   },
+  mounted() {
+    if (window.cordova) {
+      document.addEventListener(
+        "deviceready",
+        () => {
+          console.log("cordova import success");
+          /*window.sqlitePlugin.echoTest(function () {
+            alert("Test de acceso a sqlite correcto");
+          });*/
+          this.$store.state.db = window.sqlitePlugin.openDatabase({
+            name: "my.db",
+            location: "default",
+          });
+
+          this.$store.state.db.transaction(
+            function (tx) {
+              tx.executeSql(
+                "CREATE TABLE IF NOT EXISTS task ( task_id INTEGER PRIMARY KEY,task_text TEXT , done BLOB );"
+              );
+              /*tx.executeSql(
+                'INSERT INTO task (task_text, done) VALUES ("Task1", false)'
+              );
+              tx.executeSql(
+                'INSERT INTO task (task_text, done) VALUES ("Task2", true)'
+              );
+              //tx.executeSql('INSERT INTO DemoTable VALUES (?,?)', ['Betty', 202]);*/
+            },
+            function (error) {
+              console.log("Transaction ERROR: " + error.message);
+            },
+            function () {
+              console.log("Populated database OK");
+            }
+          );
+          this.$store.commit("renderDBtask");
+        },
+        false
+      );
+    } else {
+      console.log("cordova import error");
+    }
+  },
 };
 </script>
 

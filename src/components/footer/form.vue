@@ -1,7 +1,7 @@
 <template>
   <div class="footer_box">
     <div class="input_box">
-      <input type="text" v-model="text" placeholder="Something to do"  />
+      <input type="text" v-model="text" ref="tasck_input" placeholder="Something to do"  />
     </div>
     <div class="add_button_box">
       <button v-on:click="addTasck(this.text)">+</button>
@@ -20,9 +20,11 @@ export default {
     addTasck(task_text) {
       if (this.text != "") {
         this.$store.commit("itemAppend", task_text);
-        console.log(this.$store.state.list);
+        //console.log(this.$store.state.list);
         this.text = "";
-        console.log(this.$store.state.list.length);
+        this.$store.commit('showdb');
+        //console.log(this.$store.state.list.length);
+        this.$refs.tasck_input.focus();
         
       }
     },

@@ -34,6 +34,8 @@ export default {
       count: 0,
     };
   },
+  created(){
+  },
   methods: {
     showList() {
       this.show = !this.show;
@@ -106,7 +108,7 @@ export default {
 .display {
   height: auto;
   max-height: 600px !important;
-  overflow: scroll !important;
+  overflow-y: scroll !important;
 }
 .item_box {
   -webkit-transition: max-height 0.5s;
@@ -118,4 +120,9 @@ export default {
   overflow: hidden;
   max-height: 0;
 }
+
+.item_box::-webkit-scrollbar {
+  display: none;
+}
+
 </style>

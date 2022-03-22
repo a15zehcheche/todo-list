@@ -1,6 +1,6 @@
 <template>
   <div v-if="done && $store.state.list[index].done || !done && !$store.state.list[index].done" class="list_item" >
-      <div><input type="checkbox" v-model="$store.state.list[index].done" name="" id=""></div>
+      <div><input type="checkbox" v-model="$store.state.list[index].done" name="" id="" @click="updateTaskStatus(index)"></div>
       <p class="task_text" :class="{done_style:done}">{{$store.state.list[index].text}}</p>
       <div><button @click="delItem(index)">X</button></div>
   </div>
@@ -28,7 +28,17 @@ export default {
     },
     methods:{
         delItem(index){
-            this.$store.commit("itemDelete",index);
+            let task_id = this.$store.state.list[index].id;
+            this.$store.commit("itemDelete",{index,task_id});
+            this.$store.commit('showdb');
+        },
+        updateTaskStatus(index){
+            let data = {
+                done: !this.$store.state.list[index].done,
+                task_id: this.$store.state.list[index].id
+            }
+            this.$store.commit("itemUpdate",data);
+            this.$store.commit('showdb');
         }
     },
     computed: {
