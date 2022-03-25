@@ -1,6 +1,8 @@
 import { createStore } from "vuex";
 export default createStore({
   state: {
+    dbName:"my.db",
+    packageName:"io.cordova.todolist",
     count: 1,
     db:null,
     list: [

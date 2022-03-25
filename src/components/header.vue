@@ -15,11 +15,21 @@
 <script>
 export default {
   name: "Header",
+  data() {
+    return {
+      path:
+        "cdvfile://localhost/root/data/user/0/io.cordova.todolist" +
+        "/files" +
+        "/dbsql.txt",
+    };
+  },
   methods: {
-    loadFile() {
+    async loadFile() {
       console.log("file load");
+
     },
     downloadFile() {
+      console.log("file download");
       /*var successFn = function (sql, count) {
         console.log("Exported SQL: " + sql);
         alert("Exported SQL contains " + count + " statements");
@@ -31,17 +41,29 @@ export default {
         successFn: successFn,
         errorFn: errorFn,
       });
-      console.log("file download");*/
-      let path = window.cordova.file.dataDirectory;
-      alert("path:" + path);
+      
 
-      window.requestFileSystem(
+      //let path = window.cordova.file.dataDirectory;
+      let path =
+        "/Android/data/" +
+        this.$store.state.packageName +
+        "/files" +
+        "/dbsql.txt"; //+ this.$store.state.dbName
+      alert(path);
+
+      window.resolveLocalFileSystemURL(path, function (entry) {
+        var nativePath = entry.toInternalURL();
+        console.log("Native URI: " + nativePath);
+        alert(nativePath);
+        //document.getElementById("video").src = nativePath;
+      });
+      /* window.requestFileSystem(
         LocalFileSystem.PERSISTENT,
         0,
         function (fs) {
           console.log("file system open: " + fs.name);
           fs.root.getFile(
-            "newPersistentFile.txt",
+            path,
             { create: true, exclusive: false },
             function (fileEntry) {
               console.log("fileEntry is file?" + fileEntry.isFile.toString());
@@ -50,6 +72,7 @@ export default {
               writeFile(fileEntry, null);
             },
             function (error) {
+              console.log(error)
               alert("The onErrorCreateFile: " + error.message);
             }
           );
@@ -97,6 +120,60 @@ export default {
           }
         );
       }
+/*
+      // 列出文件夹下的文件
+        window.requestFileSystem(
+          LocalFileSystem.PERSISTENT,
+          0,
+          onFileSystemSuccess,
+          onFileSystemFail
+        );
+
+      let path= window.cordova.file.dataDirectory
+      //path = '/Android/data/' + this.$store.state.packageName //+ '/databases/' + this.$store.state.dbName
+      alert("path:" + path);
+      function onFileSystemSuccess(fileSystem) {
+        var directoryEntry = fileSystem.root;
+        directoryEntry.getDirectory(
+          path,
+          { create: true, exclusive: false },
+          onDirectorySuccess,
+          onDirectoryFail
+        );
+      }
+
+      function onDirectorySuccess(parent) {
+        var directoryReader = parent.createReader();
+        directoryReader.readEntries(success, fail);
+      }
+
+      function fail(error) {
+        alert("Failed to list directory contents: " + error.code);
+      }
+
+      function success(entries) {
+        if (entries.length == 0) console.log("No Records");
+        else {
+          console.log("file:")
+          for (var i = 0; i < entries.length; i++) {
+              
+             console.log( entries[i])
+            
+            //entries[i].file(function (file) {
+             // console.log("file.name " + file.name);
+            //}); 
+          }
+        }
+        console.log("file list created");
+      }
+
+      function onDirectoryFail(error) {
+        alert("Unable to create new directory: " + error.code);
+      }
+
+      function onFileSystemFail(evt) {
+        console.log(evt.target.error.code);
+      }*/
     },
   },
 };
