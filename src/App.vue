@@ -35,7 +35,7 @@ export default {
             alert("Test de acceso a sqlite correcto");
           });*/
           this.$store.state.db = window.sqlitePlugin.openDatabase({
-            name: "my.db",
+            name: this.$store.state.dbName,
             location: "default",
           });
 

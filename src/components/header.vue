@@ -2,10 +2,10 @@
   <div id="app_header">
     <h1>To Do List</h1>
     <div class="manager_box">
-      <div class="load_btn" @click="loadFile()">
+      <div class="load_btn" @click="uploadFile()">
         <img src="@/assets/upload.png" alt="" />
       </div>
-      <div class="down_btn" @click="downloadFile()">
+      <div class="down_btn" @click="exportFile()">
         <img src="@/assets/download.png" alt="" />
       </div>
     </div>
@@ -13,167 +13,48 @@
 </template>
 
 <script>
+import FileManager from "../controller/filemanager.js";
 export default {
   name: "Header",
   data() {
     return {
-      path:
-        "cdvfile://localhost/root/data/user/0/io.cordova.todolist" +
-        "/files" +
-        "/dbsql.txt",
+      path: "",
+      fileManager: null,
     };
   },
-  methods: {
-    async loadFile() {
-      console.log("file load");
-
-    },
-    downloadFile() {
-      console.log("file download");
-      /*var successFn = function (sql, count) {
-        console.log("Exported SQL: " + sql);
-        alert("Exported SQL contains " + count + " statements");
-      };
-      var errorFn = function (error) {
-        alert("The following error occurred: " + error.message);
-      };
-      window.cordova.plugins.sqlitePorter.exportDbToSql(this.$store.state.db, {
-        successFn: successFn,
-        errorFn: errorFn,
-      });
-      
-
-      //let path = window.cordova.file.dataDirectory;
-      let path =
-        "/Android/data/" +
-        this.$store.state.packageName +
-        "/files" +
-        "/dbsql.txt"; //+ this.$store.state.dbName
-      alert(path);
-
-      window.resolveLocalFileSystemURL(path, function (entry) {
-        var nativePath = entry.toInternalURL();
-        console.log("Native URI: " + nativePath);
-        alert(nativePath);
-        //document.getElementById("video").src = nativePath;
-      });
-      /* window.requestFileSystem(
-        LocalFileSystem.PERSISTENT,
-        0,
-        function (fs) {
-          console.log("file system open: " + fs.name);
-          fs.root.getFile(
-            path,
-            { create: true, exclusive: false },
-            function (fileEntry) {
-              console.log("fileEntry is file?" + fileEntry.isFile.toString());
-              // fileEntry.name == 'someFile.txt'
-              // fileEntry.fullPath == '/someFile.txt'
-              writeFile(fileEntry, null);
-            },
-            function (error) {
-              console.log(error)
-              alert("The onErrorCreateFile: " + error.message);
-            }
-          );
-        },
-        function (error) {
-          alert("The onErrorLoadFs: " + error.message);
-        }
-      );
-
-      function writeFile(fileEntry, dataObj) {
-        // Create a FileWriter object for our FileEntry (log.txt).
-        fileEntry.createWriter(function (fileWriter) {
-          fileWriter.onwriteend = function () {
-            console.log("Successful file write...");
-            readFile(fileEntry);
-          };
-
-          fileWriter.onerror = function (e) {
-            console.log("Failed file write: " + e.toString());
-          };
-
-          // If data object is not passed in,
-          // create a new Blob instead.
-          if (!dataObj) {
-            dataObj = new Blob(["some file data"], { type: "text/plain" });
-          }
-
-          fileWriter.write(dataObj);
-        });
-      }
-      function readFile(fileEntry) {
-        fileEntry.file(
-          function (file) {
-            var reader = new FileReader();
-
-            reader.onloadend = function () {
-              console.log("Successful file read: " + this.result);
-              //displayFileData(fileEntry.fullPath + ": " + this.result);
-            };
-
-            reader.readAsText(file);
+  mounted() {
+    if (window.cordova) {
+      document.addEventListener("deviceready", () => {
+        this.path = window.cordova.file.applicationStorageDirectory;
+        window.resolveLocalFileSystemURL(
+          window.cordova.file.applicationStorageDirectory,
+          (fs) => {
+            console.log("resolved fs", fs);
+            this.fileManager = new FileManager(fs);
           },
-          function (error) {
-            alert("The ErrorReadFile: " + error.message);
+          (err) => {
+            console.log("resolve error", err);
           }
         );
-      }
-/*
-      // 列出文件夹下的文件
-        window.requestFileSystem(
-          LocalFileSystem.PERSISTENT,
-          0,
-          onFileSystemSuccess,
-          onFileSystemFail
-        );
-
-      let path= window.cordova.file.dataDirectory
-      //path = '/Android/data/' + this.$store.state.packageName //+ '/databases/' + this.$store.state.dbName
-      alert("path:" + path);
-      function onFileSystemSuccess(fileSystem) {
-        var directoryEntry = fileSystem.root;
-        directoryEntry.getDirectory(
-          path,
-          { create: true, exclusive: false },
-          onDirectorySuccess,
-          onDirectoryFail
-        );
-      }
-
-      function onDirectorySuccess(parent) {
-        var directoryReader = parent.createReader();
-        directoryReader.readEntries(success, fail);
-      }
-
-      function fail(error) {
-        alert("Failed to list directory contents: " + error.code);
-      }
-
-      function success(entries) {
-        if (entries.length == 0) console.log("No Records");
-        else {
-          console.log("file:")
-          for (var i = 0; i < entries.length; i++) {
-              
-             console.log( entries[i])
-            
-            //entries[i].file(function (file) {
-             // console.log("file.name " + file.name);
-            //}); 
-          }
-        }
-        console.log("file list created");
-      }
-
-      function onDirectoryFail(error) {
-        alert("Unable to create new directory: " + error.code);
-      }
-
-      function onFileSystemFail(evt) {
-        console.log(evt.target.error.code);
-      }*/
+      });
+    }
+  },
+  methods: {
+    async uploadFile() {
+      //await
+      //this.fileManager.info();
+      console.log(this.fileManager.fs);
+    },
+    exportFile() {
+      //this.fileManager.isFileExist("databases/" + this.$store.state.dbName);
+      //this.fileManager.createDirectory("databases");
+      let path = this.path + "databases/" + this.$store.state.dbName;
+      this.fileManager.copyFile(
+        path,
+        this.$store.state.dbName,
+        LocalFileSystem.PERSISTENT
+      );
+      console.log("file export");
     },
   },
 };
