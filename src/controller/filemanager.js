@@ -16,18 +16,30 @@ export default class Filemanager {
         document.addEventListener("deviceready", onDeviceReady, false);
 
         function onDeviceReady() {
-            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail=>{
-                console.log("requestFileSystem error",fail)
+            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail => {
+
+                console.log("requestFileSystem error", fail)
             });
         }
 
         function gotFS(fileSystem) {
-            fileSystem.root.getDirectory(name, { create: true }, gotDir);
+            console.log(fileSystem)
+            fileSystem.root.getDirectory("Download", { create: true }, gotDir, fail => {
+                console.log("getDirectory", fail)
+            });
         }
 
         function gotDir(dirEntry) {
             console.log("directory create succes", dirEntry)
-            dirEntry.getFile("lockfile.txt", { create: true, exclusive: true }, gotFile);
+            dirEntry.getDirectory(name, { create: true }, fs => {
+                console.log("directory create succes", fs)
+                fs.getFile("lockfile.txt", { create: true, exclusive: true }, fs => {
+                    console.log("file create")
+                });
+            }, fail => {
+                console.log("getDirectory", fail)
+            });
+
         }
 
         function gotFile(fileEntry) {
@@ -37,33 +49,35 @@ export default class Filemanager {
     /*copyFile("file:///storage/emulated/0/Android/data/com.form.parking.violation/cache/IMG-20180505-WA0004.jpg",         
         "myImg.jpg",
         LocalFileSystem.PERSISTENT);  */
-    copyFile(baseFileURI, destPathName, fileSystem){
-        window.resolveLocalFileSystemURL(baseFileURI, 
-            function(file){        
-                window.requestFileSystem(fileSystem, 0, 
+    copyFile(baseFileURI, destPathName, fileSystem) {
+        window.resolveLocalFileSystemURL(baseFileURI,
+            function (file) {
+                window.requestFileSystem(fileSystem, 0,
+
                     function (fileSystem) {
-                       
-                        fileSystem.root.getDirectory("Databases", { create: true }, gotDir);
-                       
-                    });
-                    function gotDir(dirEntry){
-                        console.log("directory create succes", dirEntry)
-                     
-                        console.log(dirEntry);
-                        file.copyTo(dirEntry, destPathName,
-                        function(res){                        
-                            console.log('copying was successful to: ' + res.nativeURL)
-                            alert("Databases export to " + res.nativeURL)
-                        }, 
-                        function(){
-                            console.log('unsuccessful copying')
+                        fileSystem.root.getDirectory("Download", { create: true }, dirEntry => {
+                            dirEntry.getDirectory("Databases", { create: true }, gotDir);
                         });
-                    }
-            }, 
-            function(){
+                        function gotDir(dirEntry) {
+                            console.log("directory create succes", dirEntry)
+        
+                            console.log(dirEntry);
+                            file.copyTo(dirEntry, destPathName,
+                                function (res) {
+                                    console.log('copying was successful to: ' + res.nativeURL)
+                                    alert("Databases export to " + res.nativeURL)
+                                },
+                                function () {
+                                    console.log('unsuccessful copying')
+                                });
+                        }
+                    });
+               
+            },
+            function () {
                 console.log('failure! file was not found')
             });
-           
+
     }
     isFileExist(fileName) {
         this.rootDirectoryEntry.getFile(
